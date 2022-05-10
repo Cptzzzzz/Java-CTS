@@ -2,7 +2,7 @@
 
 OOP课程 咖喱铁路售票系统curry ticketing system（CTS） 作业记录
 
-CTS-3
+[CTS-3](Questions/CTS-3.md)
 
 在CTS-2的基础上增加四个功能
 
