@@ -4,7 +4,7 @@ BUAA软件学院2022春OOP（面向对象程序设计JAVA）课程作业
 
 咖喱铁路售票系统curry ticketing system（CTS） 作业记录
 
-其中包含每次作业的题面以及通过PatPat测评的源代码，源代码均已通过PatPat测评。
+其中包含每次作业的题面以及通过了[PatPat测评](https://github.com/BUAA-SE-2021/patpat)的源代码。
 
 目前更新到了CTS-4
 
