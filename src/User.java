@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+
 
 public class User {
     private String name;
@@ -116,8 +112,6 @@ public class User {
     }
 
     private static ArrayList<User> userArray = new ArrayList<User>();
-    private static int negative=0;
-    private static int positive=0;
     /**
      * 创建用户命令的处理函数
      * @param commandList
