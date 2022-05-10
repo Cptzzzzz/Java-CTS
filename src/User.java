@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+
 
 public class User {
     private String name;
@@ -12,15 +8,6 @@ public class User {
     private int race;
     private int identity;
 
-
-
-
-    private ArrayList<String> trainNumber = new ArrayList<>();
-    private ArrayList<String> startStation = new ArrayList<>();
-    private ArrayList<String> endStation = new ArrayList<>();
-    private ArrayList<String> seatId = new ArrayList<>();
-    private ArrayList<Integer> ticketNumber = new ArrayList<>();
-    private ArrayList<Character> orderStatus=new ArrayList<>();
     public String getName() {
         return name;
     }
@@ -106,18 +93,7 @@ public class User {
         return false;
     }
 
-    public void buyTicket(String [] commandList){
-        this.trainNumber.add(commandList[1]);
-        this.startStation.add(commandList[2]);
-        this.endStation.add(commandList[3]);
-        this.seatId.add(commandList[4]);
-        this.ticketNumber.add(Integer.valueOf(commandList[5]));
-        this.orderStatus.add('F');
-    }
-
     private static ArrayList<User> userArray = new ArrayList<User>();
-    private static int negative=0;
-    private static int positive=0;
     /**
      * 创建用户命令的处理函数
      * @param commandList
@@ -231,90 +207,4 @@ public class User {
     public static void addUser(User newUser){
         User.userArray.add(newUser);
     }
-
-    public static int commandLogin(String [] commandList,int login){
-        if(commandList.length!=3){
-            System.out.println("Arguments illegal");
-            return login;
-        }
-        if(login!=-1){
-            System.out.println("You have logged in");
-            return login;
-        }
-        User user=null;
-        int nowUser=-1;
-        for(int i=0;i<userArray.size();i++){
-            user=userArray.get(i);
-            if(user.judgeByAadhaaar(commandList[1])){
-                nowUser=i;
-                break;
-            }
-        }
-        if(nowUser==-1){
-            System.out.println("User does not exist");
-            return login;
-        }
-        if(!user.getName().equals(commandList[2])){
-            System.out.println("Wrong name");
-            return login;
-        }
-        System.out.println("Login success");
-        return nowUser;
-    }
-
-    public static int commandLogout(String [] commandList,int login){
-        if(commandList.length!=1){
-            System.out.println("Arguments illegal");
-            return login;
-        }
-        if(login==-1){
-            System.out.println("No user has logged in");
-            return login;
-        }
-        System.out.println("Logout success");
-        return -1;
-    }
-
-    public static void commandBuyTicket(String [] commandList,int login){
-        if(commandList.length!=6){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        if(login==-1){
-            System.out.println("Please login first");
-            return;
-        }
-        User user=userArray.get(login);
-        if(!Train.buyTicket(commandList)){
-            return;
-        }
-        user.buyTicket(commandList);
-        System.out.println("Thanks for your order");
-    }
-
-    public static void commandListOrder(String [] commandList,int login){
-        if(commandList.length!=1){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        if(login==-1){
-            System.out.println("Please login first");
-            return;
-        }
-        User user=userArray.get(login);
-        if(user.trainNumber.size()==0){
-            System.out.println("No order");
-            return;
-        }
-        for(int i=user.trainNumber.size()-1;i>=0;i--){
-            System.out.println(
-                    String.format("[%s: %s->%s] seat:%s num:%d price:%.2f"
-                    ,user.trainNumber.get(i),user.startStation.get(i),user.endStation.get(i)
-                    ,user.seatId.get(i),user.ticketNumber.get(i)
-                    ,user.ticketNumber.get(i)*Train.getPrice(user.trainNumber.get(i),user.startStation.get(i),user.endStation.get(i),user.seatId.get(i)))
-            );
-        }
-    }
-
-
 }

@@ -4,7 +4,7 @@ public class Test {
     public static void main(String[] args) {
         Scanner in =new Scanner(System.in);
         String [] commandList;
-        int state=0,login=-1;
+        int state=0;
         while (true){
             String str=in.nextLine();
             if(str.equals("QUIT")){
@@ -26,22 +26,6 @@ public class Test {
             }
             if(commandList[0].equals("listTrain")){
                 Train.commandListTrain(commandList);
-                continue;
-            }
-            if(commandList[0].equals("login")){
-                login=User.commandLogin(commandList,login);
-                continue;
-            }
-            if(commandList[0].equals("logout")){
-                login=User.commandLogout(commandList,login);
-                continue;
-            }
-            if(commandList[0].equals("buyTicket")){
-                User.commandBuyTicket(commandList,login);
-                continue;
-            }
-            if(commandList[0].equals("listOrder")){
-                User.commandListOrder(commandList,login);
                 continue;
             }
             if(state==0){
