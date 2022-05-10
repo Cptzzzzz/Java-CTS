@@ -44,26 +44,6 @@ public class Test {
                 User.commandListOrder(commandList,login);
                 continue;
             }
-            if(commandList[0].equals("rechargeBalance")){
-                User.commandRechargeBalance(commandList,login);
-                continue;
-            }
-            if(commandList[0].equals("checkBalance")){
-                User.commandCheckBalance(commandList,login);
-                continue;
-            }
-            if(commandList[0].equals("importCert")){
-                User.commandImportCert(commandList);
-                continue;
-            }
-            if(commandList[0].equals("cancelOrder")){
-                User.commandCancelOrder(commandList,login);
-                continue;
-            }
-            if(commandList[0].equals("payOrder")){
-                User.commandPayOrder(commandList,login);
-                continue;
-            }
             if(state==0){
                 if(commandList.length==1&&commandList[0].equals("TunakTunakTun")){
                     state=1;

@@ -203,14 +203,14 @@ abstract public class Train {
      * @param commandList
      * @return
      */
-    public static boolean buyTicket(String [] commandList,boolean negative){
+    public static boolean buyTicket(String [] commandList){
         switch (getTrainTypeByNumber(commandList[1])){
             case 1:
                 return NormalTrain.buyTicket(commandList);
             case 2:
                 return GatimaanTrain.buyTicket(commandList);
             case 3:
-                return KoyaTrain.buyTicket(commandList,negative);
+                return KoyaTrain.buyTicket(commandList);
             default:
                 System.out.println("Train does not exist");
                 return false;

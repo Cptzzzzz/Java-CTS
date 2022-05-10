@@ -286,7 +286,7 @@ public class KoyaTrain extends Train{
      * @param commandList
      * @return
      */
-    public static boolean buyTicket(String [] commandList,boolean negative){
+    public static boolean buyTicket(String [] commandList){
         if(checkTrain(commandList[1])){
             System.out.println("Train does not exist");
             return false;
@@ -301,10 +301,6 @@ public class KoyaTrain extends Train{
         int seatId=koyaTrain.getTicketIdBySeatId(commandList[4]);
         if(seatId==-1){
             System.out.println("Seat does not match");
-            return false;
-        }
-        if(negative!=true){
-            System.out.println("Cert illegal");
             return false;
         }
         int ticketNum;

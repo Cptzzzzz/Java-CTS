@@ -11,42 +11,9 @@ public class User {
     private int region;
     private int race;
     private int identity;
-    private int stuTimes=0;
-    private boolean isStudent;
-    private boolean isNegative=false;
-    private double money;
 
-    public double getMoney() {
-        return money;
-    }
 
-    public void setMoney(double money) {
-        this.money = money;
-    }
 
-    public boolean isNegative() {
-        return isNegative;
-    }
-
-    public void setNegative(boolean negative) {
-        isNegative = negative;
-    }
-
-    public boolean isStudent() {
-        return isStudent;
-    }
-
-    public void setStudent(boolean student) {
-        isStudent = student;
-    }
-
-    public int getStuTimes() {
-        return stuTimes;
-    }
-
-    public void setStuTimes(int stuTimes) {
-        this.stuTimes = stuTimes;
-    }
 
     private ArrayList<String> trainNumber = new ArrayList<>();
     private ArrayList<String> startStation = new ArrayList<>();
@@ -129,9 +96,6 @@ public class User {
                 ,this.getSex()
                 ,this.getAadhaar()
         );
-        if(isStudent()){
-            res+=String.format("Discount:%d\n",this.getStuTimes());
-        }
         return res;
     }
 
@@ -159,7 +123,7 @@ public class User {
      * @param commandList
      */
     public static void commandAddUser(String [] commandList){
-        if(commandList.length!=4 && commandList.length!=5){
+        if(commandList.length!=4){
             System.out.println("Arguments illegal");
             return;
         }
@@ -183,13 +147,6 @@ public class User {
             System.out.println("Aadhaar number exist");
             return;
         }
-        if(commandList.length==5){
-            newUser.setStuTimes(Integer.valueOf(commandList[4]));
-            newUser.setStudent(true);
-        }else{
-            newUser.setStudent(false);
-        }
-        newUser.setMoney(0);
         User.addUser(newUser);
         System.out.print(newUser.toString());
     }
@@ -328,7 +285,7 @@ public class User {
             return;
         }
         User user=userArray.get(login);
-        if(!Train.buyTicket(commandList,user.isNegative())){
+        if(!Train.buyTicket(commandList)){
             return;
         }
         user.buyTicket(commandList);
@@ -351,181 +308,13 @@ public class User {
         }
         for(int i=user.trainNumber.size()-1;i>=0;i--){
             System.out.println(
-                    String.format("[%s: %s->%s] seat:%s num:%d price:%.2f paid:%c"
+                    String.format("[%s: %s->%s] seat:%s num:%d price:%.2f"
                     ,user.trainNumber.get(i),user.startStation.get(i),user.endStation.get(i)
                     ,user.seatId.get(i),user.ticketNumber.get(i)
-                    ,user.ticketNumber.get(i)*Train.getPrice(user.trainNumber.get(i),user.startStation.get(i),user.endStation.get(i),user.seatId.get(i))
-                    ,user.orderStatus.get(i))
+                    ,user.ticketNumber.get(i)*Train.getPrice(user.trainNumber.get(i),user.startStation.get(i),user.endStation.get(i),user.seatId.get(i)))
             );
         }
     }
 
-    public static void commandRechargeBalance(String [] commandList,int login){
-        if(commandList.length!=2){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        if(login==-1){
-            System.out.println("Please login first");
-            return;
-        }
-        double money=Double.valueOf(commandList[1]);
-        if(money<0){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        User nowUser=userArray.get(login);
-        nowUser.setMoney(nowUser.getMoney()+money);
-        System.out.println("Recharge Success");
-    }
-    public static void commandCheckBalance(String [] commandList,int login){
-        if(commandList.length!=1){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        if(login==-1){
-            System.out.println("Please login first");
-            return;
-        }
-        User nowUser=userArray.get(login);
-        System.out.println(String.format("UserName:%s\nBalance:%.2f"
-                ,nowUser.getName()
-                ,nowUser.getMoney()
-        ));
-    }
 
-    public static void commandImportCert(String [] commandList){
-        if(commandList.length!=2){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        HashMap<String,Boolean> map;
-        try{
-            map=read(commandList[1]);
-        }catch (Exception e){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        Iterator<String> iterator = map.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            setCert(key,map.get(key));
-            if(map.get(key)) User.negative++;
-            else User.positive++;
-        }
-        System.out.println(
-                String.format("Import Success, Positive:%d Negative:%d"
-                ,User.positive
-                ,User.negative)
-        );
-    }
-    public static HashMap<String, Boolean> read(String fileName) throws IOException, IOException {
-        HashMap<String, Boolean> cert = new HashMap<>();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] lines = line.split(",");
-            cert.put(lines[0], lines[1].equals("N"));
-        }
-        br.close();
-        return cert;
-    }
-
-    public static void setCert(String Aadhaar,boolean isNegative){
-        for (User nowUser : userArray) {
-            if(nowUser.getAadhaar().equals(Aadhaar)){
-                nowUser.setNegative(isNegative);
-                break;
-            }
-        }
-    }
-
-    public static void commandCancelOrder(String [] commandList,int login){
-        if(commandList.length!=6){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        if(login==-1){
-            System.out.println("Please login first");
-            return;
-        }
-        User nowUser=userArray.get(login);
-        int totTickets=0,backTickets=Integer.valueOf(commandList[5]);
-        for(int i=0;i<nowUser.trainNumber.size();i++){
-            if(nowUser.trainNumber.get(i).equals(commandList[1])&&
-            nowUser.startStation.get(i).equals(commandList[2])&&
-            nowUser.endStation.get(i).equals(commandList[3])&&
-            nowUser.seatId.get(i).equals(commandList[4])&&
-            nowUser.orderStatus.get(i)=='F'){
-                totTickets+=nowUser.ticketNumber.get(i);
-            }
-        }
-        if(totTickets==0){
-            System.out.println("No such Record");
-            return;
-        }
-        if(totTickets<backTickets){
-            System.out.println("No enough orders");
-            return;
-        }
-        for(int i=nowUser.trainNumber.size()-1;i>=0;i--){
-            if(nowUser.trainNumber.get(i).equals(commandList[1])&&
-                    nowUser.startStation.get(i).equals(commandList[2])&&
-                    nowUser.endStation.get(i).equals(commandList[3])&&
-                    nowUser.seatId.get(i).equals(commandList[4])&&
-                    nowUser.orderStatus.get(i)=='F'){
-                int ticketNumber=nowUser.ticketNumber.get(i);
-                int tNum= Math.min(backTickets, ticketNumber);
-                backTickets-=tNum;
-                ticketNumber-=tNum;
-                nowUser.ticketNumber.set(i,ticketNumber);
-                if(ticketNumber==0){
-                    nowUser.ticketNumber.remove(i);
-                }
-                if(backTickets==0)break;
-            }
-        }
-        Train.cancelTicket(commandList[1],commandList[4], Integer.valueOf(commandList[5]));
-        System.out.println("Cancel success");
-    }
-
-    public static void commandPayOrder(String [] commandList,int login){
-        if(commandList.length!=1){
-            System.out.println("Arguments illegal");
-            return;
-        }
-        if(login==-1){
-            System.out.println("Please login first");
-            return;
-        }
-        User nowUser=userArray.get(login);
-        if(nowUser.ticketNumber.size()==0){
-            System.out.println("No order");
-            return;
-        }
-        double cost=0;
-        int times=nowUser.getStuTimes();
-        for(int i=nowUser.trainNumber.size()-1;i>=0;i--){
-            if(nowUser.orderStatus.get(i)=='F'){
-                int saveTime=Math.min(times,nowUser.ticketNumber.get(i));
-                times-=saveTime;
-                double price=Train.getPrice(nowUser.trainNumber.get(i)
-                ,nowUser.startStation.get(i)
-                ,nowUser.endStation.get(i)
-                ,nowUser.seatId.get(i));
-                cost+=price*0.05*saveTime+price*(nowUser.ticketNumber.get(i)-saveTime);
-            }
-        }
-        if(cost>nowUser.getMoney()){
-            System.out.println("Balance does not enough");
-            return;
-        }
-        nowUser.setMoney(nowUser.getMoney()-cost);
-        nowUser.setStuTimes(times);
-        for(int i = nowUser.orderStatus.size() - 1; i >= 0; i--){
-            nowUser.orderStatus.set(i,'T');
-        }
-        System.out.println("Payment success");
-    }
 }
